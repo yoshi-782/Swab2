@@ -1,0 +1,24 @@
+﻿<Window x:Class="Swab2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Swab2" xmlns:cefwpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+        mc:Ignorable="d"
+        xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+        Title="Swab2 (Untitle)" Height="450" Width="800" ContentRendered="Window_ContentRendered" Closing="Window_Closing">
+    <DockPanel Name="dockPanel">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="ファイル(_F)" Name="menu">
+                <MenuItem Header="新規作成(_N)" Name="menu_New" />
+                <MenuItem Header="開く(_O)" Name="menu_Open" />
+                <MenuItem Header="開き直す(_R)" Name="menu_Reopen"/>
+                <Separator/>
+                <MenuItem Header="終了(_X)" Name="manu_Exit" />
+            </MenuItem>
+            <MenuItem Header="ツール(_T)" Name="tool">
+                <MenuItem Header="デベロッパー ツール" Name="tool_dvTool" />
+            </MenuItem>
+        </Menu>
+    </DockPanel>
+</Window>
