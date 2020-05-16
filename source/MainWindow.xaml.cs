@@ -2,9 +2,7 @@
 using CefSharp.Wpf;
 using Microsoft.Win32;
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Swab2
@@ -37,6 +35,11 @@ namespace Swab2
         private readonly Json json = new Json();
 
         /// <summary>
+        /// Webサーバーを起動させるクラス
+        /// </summary>
+        private readonly WebServer server = new WebServer();
+
+        /// <summary>
         /// ブラウザクラス
         /// </summary>
         public ChromiumWebBrowser browser;
@@ -48,6 +51,11 @@ namespace Swab2
         /// <param name="e"></param>
         private void Window_ContentRendered(object sender, EventArgs e)
         {
+            // Webサーバーがエラーを検知したらメッセージ表示
+            server.ErrorHandler += (err) =>
+            {
+                MessageBox.Show($"Webサーバーがエラーを検知しました。\n\n{err.Ex.Message}");
+            };
             LoadHTML();
         }
 
@@ -59,8 +67,10 @@ namespace Swab2
             var settings = new CefSettings
             {
                 AcceptLanguageList = "ja-JP",
-                Locale = "ja"
+                Locale = "ja",
+                LogSeverity = LogSeverity.Disable
             };
+
             Cef.Initialize(settings);
 
             browser = new ChromiumWebBrowser();
@@ -114,7 +124,7 @@ namespace Swab2
             // 開き直す
             menu_Reopen.Click += (s, e) =>
             {
-                LoadHTML();
+                browser.Reload();
             };
 
             // 終了
@@ -203,11 +213,20 @@ namespace Swab2
         {
             if (json.SettingJson.HTMLFilePath.Length > 0)
             {
-                browser.Load(this.json.SettingJson.HTMLFilePath);
+                // htmlのパスが設定されていれば、そのhtmlファイルを表示
+                server.Path = this.json.SettingJson.HTMLFilePath;
+                if (!server.IsRun)
+                {
+                    // ローカルWebサーバーの開始
+                    server.Start();
+                }
+                browser.Address = server.Url;
+                browser.Reload();
                 SetWindowNotResize(false);
             }
             else
             {
+                // 設定されていなければ、Welcomeページを表示
                 browser.LoadHtml(Properties.Resources.index);
                 SetWindowNotResize(true);
             }
@@ -233,10 +252,13 @@ namespace Swab2
                         this.HTMLTitle = browser.Title;
                         SetWindowTitle();
                     });
-                    
+
+                    // イベントを解除
                     browser.FrameLoadEnd -= eventHandler;
                 }
             };
+
+            // イベント設定
             browser.FrameLoadEnd += eventHandler;
         }
 
@@ -247,6 +269,10 @@ namespace Swab2
         /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            // ローカルWebサーバーを停止
+            server.Stop();
+            
+            // Jsonファイルに設定を出力
             json.WriteJson();
         }
     }

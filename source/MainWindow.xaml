@@ -12,7 +12,7 @@
             <MenuItem Header="ファイル(_F)" Name="menu">
                 <MenuItem Header="新規作成(_N)" Name="menu_New" />
                 <MenuItem Header="開く(_O)" Name="menu_Open" />
-                <MenuItem Header="開き直す(_R)" Name="menu_Reopen"/>
+                <MenuItem Header="リロード(_R)" Name="menu_Reopen"/>
                 <Separator/>
                 <MenuItem Header="終了(_X)" Name="manu_Exit" />
             </MenuItem>

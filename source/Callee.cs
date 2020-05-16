@@ -32,19 +32,7 @@ namespace Swab2
         /// コンストラクタ
         /// </summary>
         /// <param name="mw">MainWindowクラス</param>
-        public Callee(MainWindow mw)
-        {
-            MWindow = mw;
-        }
-
-        /// <summary>
-        /// アプリの初期設定
-        /// htmlファイルの読み込みが完了後に、Javascript側に存在すれば実行
-        /// </summary>
-        //public void InitWebApp()
-        //{
-        //    
-        //}
+        public Callee(MainWindow mw) => MWindow = mw;
 
         /// <summary>
         /// メッセージボックスの表示
@@ -61,36 +49,24 @@ namespace Swab2
         /// </summary>
         /// <param name="w">Width</param>
         /// <param name="h">Height</param>
-        public void SetWinSize(int w, int h)
-        {
-            MWindow.SetWindowSize(w, h);
-        }
+        public void SetWinSize(int w, int h) => MWindow.SetWindowSize(w, h);
 
         /// <summary>
         /// 画面のサイズを固定にする
         /// </summary>
         /// <param name="isResize"></param>
-        public void SetNotResize(bool isResize)
-        {
-            MWindow.SetWindowNotResize(isResize);
-        }
+        public void SetNotResize(bool isResize) => MWindow.SetWindowNotResize(isResize);
 
         /// <summary>
         /// 画面のタイトルを設定する
         /// </summary>
         /// <param name="title">タイトル</param>
-        public void SetWinTitle(string title = "")
-        {
-            MWindow.SetWindowTitle(title);
-        }
+        public void SetWinTitle(string title = "") => MWindow.SetWindowTitle(title);
 
         /// <summary>
         /// htmlファイルを読み込んで画面に表示させる
         /// </summary>
-        public void LoadHTML()
-        {
-            MWindow.LoadHTMLFile();
-        }
+        public void LoadHTML() => MWindow.LoadHTMLFile();
 
         /// <summary>
         /// JavaScriptにBindされるすべての関数名を取得
