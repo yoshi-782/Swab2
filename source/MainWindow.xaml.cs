@@ -116,15 +116,13 @@ namespace Swab2
             };
 
             // 開く
-            menu_Open.Click += (s, e) =>
-            {
-                LoadHTMLFile();
-            };
+            menu_Open.Click += (s, e) => LoadHTMLFile();
 
-            // 開き直す
+            // リロード
             menu_Reopen.Click += (s, e) =>
             {
                 browser.Reload();
+                ExecuteAfterLoaded();
             };
 
             // 終了
@@ -180,7 +178,7 @@ namespace Swab2
         {
             this.Dispatcher.Invoke((Action)(() =>
             {
-                this.Title = title.Length > 0 ? title : this.HTMLTitle;
+                this.Title = title.Length > 0 || this.HTMLTitle == null ? title : this.HTMLTitle;
             }));
         }
 
@@ -199,7 +197,7 @@ namespace Swab2
 
             if (ofd.ShowDialog() == true)
             {
-                json.SettingJson.HTMLFilePath = ofd.FileName;
+                json.SetHTMLFilePath(ofd.FileName);
                 LoadHTML();
             }
         }
@@ -211,16 +209,16 @@ namespace Swab2
         /// <param name="init">初期設定の有無(デフォルトはなし)</param>
         private void LoadHTML()
         {
-            if (json.SettingJson.HTMLFilePath.Length > 0)
+            if (json.SettingJson.HTMLDirPath.Length > 0)
             {
                 // htmlのパスが設定されていれば、そのhtmlファイルを表示
-                server.Path = this.json.SettingJson.HTMLFilePath;
+                server.HTMLDirPath = this.json.SettingJson.HTMLDirPath;
+                // ローカルWebサーバーの開始
                 if (!server.IsRun)
                 {
-                    // ローカルWebサーバーの開始
                     server.Start();
                 }
-                browser.Address = server.Url;
+                browser.Address = server.Url + this.json.SettingJson.HTMLFileName;
                 browser.Reload();
                 SetWindowNotResize(false);
             }
@@ -231,7 +229,14 @@ namespace Swab2
                 SetWindowNotResize(true);
             }
 
-            // htmlの読み込みが完了したら、JavaScriptのinit()を実行
+            ExecuteAfterLoaded();
+        }
+
+        /// <summary>
+        /// htmlの読み込みが完了したら、JavaScriptのinit()を実行
+        /// </summary>
+        private void ExecuteAfterLoaded()
+        {
             EventHandler<FrameLoadEndEventArgs> eventHandler = null;
             eventHandler += (object s, FrameLoadEndEventArgs e) =>
             {
@@ -239,16 +244,16 @@ namespace Swab2
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        // JavaScriptのinit()実行
-                        e.Frame.EvaluateScriptAsync("init();").ContinueWith(x =>
+                    // JavaScriptのinit()実行
+                    e.Frame.EvaluateScriptAsync("init();").ContinueWith(x =>
+                    {
+                        if (x.Result.Message.IndexOf("init is not defined") > -1)
                         {
-                            if (x.Result.Message.IndexOf("init is not defined") > -1)
-                            {
-                                SetDefaultWindow();
-                            }
-                        });
+                            SetDefaultWindow();
+                        }
+                    });
 
-                        // htmlのタイトル取得とウィンドウタイトルに反映
+                    // htmlのタイトル取得とウィンドウタイトルに反映
                         this.HTMLTitle = browser.Title;
                         SetWindowTitle();
                     });

@@ -11,8 +11,14 @@ namespace Swab2
         /// <summary>
         /// htmlファイルのパス
         /// </summary>
-        [DataMember(Name = "filePath")]
-        public string HTMLFilePath { get; set; } = "";
+        [DataMember(Name = "dirPath")]
+        public string HTMLDirPath { get; set; } = "";
+
+        /// <summary>
+        /// htmlファイル名
+        /// </summary>
+        [DataMember(Name = "fileName")]
+        public string HTMLFileName { get; set; } = "";
     }
 
     public class Json
@@ -67,9 +73,9 @@ namespace Swab2
                 }
 
                 // htmlファイルが存在しない場合は、空文字を設定し、デフォルトを表示させるようにする
-                if (!File.Exists(SettingJson.HTMLFilePath))
+                if (!Directory.Exists(SettingJson.HTMLDirPath))
                 {
-                    SettingJson.HTMLFilePath = "";
+                    SettingJson.HTMLDirPath = "";
                 }
             }
             else
@@ -78,6 +84,16 @@ namespace Swab2
                 SettingJson = new Setting();
                 WriteJson();
             }
+        }
+
+        /// <summary>
+        /// htmlファイルの場所を一括設定
+        /// </summary>
+        /// <param name="filePath">ディレクトリパス</param>
+        public void SetHTMLFilePath(string filePath)
+        {
+            this.SettingJson.HTMLDirPath = Path.GetDirectoryName(filePath);
+            this.SettingJson.HTMLFileName = Path.GetFileName(filePath);
         }
     }
 }

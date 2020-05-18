@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Swab2
 {
@@ -14,7 +15,7 @@ namespace Swab2
         /// <summary>
         /// htmlファイルがあるパス
         /// </summary>
-        public string Path { get; set; }
+        public string HTMLDirPath { get; set; }
 
         /// <summary>
         /// ブラウザで表示するURL
@@ -29,7 +30,7 @@ namespace Swab2
         /// <summary>
         /// Pathが設定されているかどうか
         /// </summary>
-        public bool IsPathSetting => this.Path.Length > 0 ? true : false;
+        public bool IsPathSetting => this.HTMLDirPath.Length > 0 ? true : false;
 
         /// <summary>
         /// エラーイベント
@@ -61,15 +62,19 @@ namespace Swab2
             {
                 while (true)
                 {
-                    var conText = listener.GetContext();
-                    var req = conText.Request;
-                    var res = conText.Response;
-
+                    HttpListenerContext conText = listener.GetContext();
+                    HttpListenerRequest req = conText.Request;
+                    HttpListenerResponse res = conText.Response;
+                    string path = HTMLDirPath + req.RawUrl.Replace("/", "\\");
+                    
                     try
                     {
-                        res.StatusCode = 200;
-                        byte[] content = File.ReadAllBytes(Path);
-                        res.OutputStream.Write(content, 0, content.Length);
+                        if (File.Exists(path))
+                        {
+                            res.StatusCode = 200;
+                            byte[] content = File.ReadAllBytes(path);
+                            res.OutputStream.Write(content, 0, content.Length);
+                        }
                     }
                     catch (Exception ex)
                     {
