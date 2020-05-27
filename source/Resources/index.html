@@ -14,6 +14,11 @@
                 csCallee.winMessageBox("JavaScriptからC#メソッドを呼び出すテスト");
             }
 
+            function cmd() {
+                csCallee.command("cd").then((resilt) => csCallee.winMessageBox(resilt))
+                //csCallee.command("J:/Programming/Python/Tool/tamiyasu_talk/vrx.exe", "テストこんにちは");
+            }
+
             function load(){
                 csCallee.loadHTML();
             }

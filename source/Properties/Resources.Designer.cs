@@ -68,16 +68,16 @@ namespace Swab2.Properties {
         ///        &lt;meta charset=&quot;utf-8&quot; /&gt;
         ///        &lt;title&gt;Swab Default Page&lt;/title&gt;
         ///        &lt;script type=&quot;text/javascript&quot;&gt;
-        ///            function init(){
-        ///                window.external.InitWebApp(&quot;Swab Default Page&quot;, 800, 460);
-        ///                window.external.SetNotResize(true);
+        ///            async function init() {
+        ///                await CefSharp.BindObjectAsync(&quot;csCallee&quot;);
+        ///                csCallee.setNotResize(true);
         ///            }
         ///
         ///            function msgbox(){
-        ///                window.external.WinMessageBox(&quot;JavaScriptからC#メソッドを呼び出すテスト&quot;);
+        ///                csCallee.winMessageBox(&quot;JavaScriptからC#メソッドを呼び出すテスト&quot;);
         ///            }
         ///
-        ///       [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
+        ///            function cmd() { [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string index {
             get {
@@ -92,21 +92,47 @@ namespace Swab2.Properties {
         ///    &lt;head&gt;
         ///        &lt;meta charset=&quot;utf-8&quot; /&gt;
         ///        &lt;title&gt;Template&lt;/title&gt;
+        ///        &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js&quot;&gt;&lt;/script&gt;
         ///        &lt;script type=&quot;text/javascript&quot;&gt;
-        ///            
+        ///            async function init() {
+        ///                await CefSharp.BindObjectAsync(&quot;csCallee&quot;);
+        ///                csCallee.setWinSize(520, 250);
+        ///                csCallee.setNotResize(true);
+        ///                check();
+        ///  [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string setting {
+            get {
+                return ResourceManager.GetString("setting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;!DOCTYPE html&gt;
+        ///&lt;!-- saved from url=(0017)http://localhost/ --&gt;
+        ///&lt;html&gt;
+        ///    &lt;head&gt;
+        ///        &lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///        &lt;title&gt;Template&lt;/title&gt;
+        ///        &lt;script type=&quot;text/javascript&quot;&gt;
+        ///            async function init() {
+        ///                await CefSharp.BindObjectAsync(&quot;csCallee&quot;);
+        ///            }
         ///        &lt;/script&gt;
         ///        &lt;style type=&quot;text/css&quot;&gt;
         ///            
         ///        &lt;/style&gt;
         ///    &lt;/head&gt;
         ///    &lt;body&gt;
-        ///        
+        ///        &lt;div class=&quot;container&quot;&gt;
+        ///            
+        ///        &lt;/div&gt;
         ///    &lt;/body&gt;
         ///&lt;/html&gt; に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string Template {
+        internal static string template {
             get {
-                return ResourceManager.GetString("Template", resourceCulture);
+                return ResourceManager.GetString("template", resourceCulture);
             }
         }
     }

@@ -30,19 +30,24 @@ namespace Swab2
         public string HTMLTitle { get; set; } = "";
 
         /// <summary>
-        /// Jsonファイルの設定を読み書きするクラス
+        /// 設定中かどうか
         /// </summary>
-        private readonly Json json = new Json();
+        public bool IsDuringSetting { get; set; } = false;
 
         /// <summary>
-        /// Webサーバーを起動させるクラス
+        /// Jsonファイルの設定を読み書きするクラス
         /// </summary>
-        private readonly WebServer server = new WebServer();
+        public Json JsonSetting { get; set; } = new Json();
 
         /// <summary>
         /// ブラウザクラス
         /// </summary>
         public ChromiumWebBrowser browser;
+
+        /// <summary>
+        /// Webサーバーを起動させるクラス
+        /// </summary>
+        private readonly WebServer server = new WebServer();
 
         /// <summary>
         /// ウィンドウが表示された時に一度実行
@@ -100,18 +105,20 @@ namespace Swab2
             // 新規作成
             menu_New.Click += (s, e) =>
             {
-                MessageBox.Show("htmlのテンプレートファイルを出力します。", this.AppName, MessageBoxButton.OK, MessageBoxImage.Information);
-                var sfd = new SaveFileDialog()
+                if (MessageBox.Show("htmlのテンプレートファイルを出力します。", this.AppName, MessageBoxButton.OK, MessageBoxImage.Information) == MessageBoxResult.OK)
                 {
-                    FileName = "index.html",
-                    Filter = "htmlファイル (*.html;*.htm)|*.html;*.htm|テキストファイル (*.txt)|*.txt|すべてのファイル(*.*)|*.*",
-                    Title = "テンプレートファイルの保存先を選択してください。",
-                    RestoreDirectory = true
-                };
+                    var sfd = new SaveFileDialog()
+                    {
+                        FileName = "index.html",
+                        Filter = "htmlファイル (*.html;*.htm)|*.html;*.htm|テキストファイル (*.txt)|*.txt|すべてのファイル(*.*)|*.*",
+                        Title = "テンプレートファイルの保存先を選択してください。",
+                        RestoreDirectory = true
+                    };
 
-                if (sfd.ShowDialog() == true)
-                {
-                    File.WriteAllText(sfd.FileName, Properties.Resources.Template);
+                    if (sfd.ShowDialog() == true)
+                    {
+                        File.WriteAllText(sfd.FileName, Properties.Resources.template);
+                    }
                 }
             };
 
@@ -130,6 +137,17 @@ namespace Swab2
 
             // デベロッパーツールを開く
             tool_dvTool.Click += (s, e) => browser.ShowDevTools();
+
+            // オプション
+            tool_Option.Click += (s, e) =>
+            {
+                // 設定画面でなければ表示
+                //if (!IsDuringSetting)
+                //{
+                //    browser.LoadHtml(Properties.Resources.setting);
+                //    ExecuteAfterLoaded();
+                //}
+            };
         }
 
         /// <summary>
@@ -185,21 +203,30 @@ namespace Swab2
         /// <summary>
         /// htmlファイルを読み込む
         /// </summary>
-        public void LoadHTMLFile()
+        public void LoadHTMLFile(bool dialog = true)
         {
-            var ofd = new OpenFileDialog()
+            if (dialog)
             {
-                FileName = "index.html",
-                Filter = "HTMLファイル(*.html;*.htm)|*.html;*.htm|すべてのファイル(*.*)|*.*",
-                Title = "開く",
-                RestoreDirectory = true
-            };
+                var ofd = new OpenFileDialog()
+                {
+                    FileName = "index.html",
+                    Filter = "HTMLファイル(*.html;*.htm)|*.html;*.htm|すべてのファイル(*.*)|*.*",
+                    Title = "開く",
+                    RestoreDirectory = true
+                };
 
-            if (ofd.ShowDialog() == true)
-            {
-                json.SetHTMLFilePath(ofd.FileName);
-                LoadHTML();
+                if (ofd.ShowDialog() == true)
+                {
+                    JsonSetting.SetHTMLFilePath(ofd.FileName);
+
+                }
+                else
+                {
+                    return;
+                }
             }
+            
+            LoadHTML();
         }
 
         /// <summary>
@@ -209,16 +236,16 @@ namespace Swab2
         /// <param name="init">初期設定の有無(デフォルトはなし)</param>
         private void LoadHTML()
         {
-            if (json.SettingJson.HTMLDirPath.Length > 0)
+            if (JsonSetting.JsonProperties.HTMLDirPath.Length > 0)
             {
                 // htmlのパスが設定されていれば、そのhtmlファイルを表示
-                server.HTMLDirPath = this.json.SettingJson.HTMLDirPath;
+                server.HTMLDirPath = this.JsonSetting.JsonProperties.HTMLDirPath;
                 // ローカルWebサーバーの開始
                 if (!server.IsRun)
                 {
                     server.Start();
                 }
-                browser.Address = server.Url + this.json.SettingJson.HTMLFileName;
+                browser.Address = server.Url + this.JsonSetting.JsonProperties.HTMLFileName;
                 browser.Reload();
                 SetWindowNotResize(false);
             }
@@ -278,7 +305,7 @@ namespace Swab2
             server.Stop();
             
             // Jsonファイルに設定を出力
-            json.WriteJson();
+            JsonSetting.WriteJson();
         }
     }
 }

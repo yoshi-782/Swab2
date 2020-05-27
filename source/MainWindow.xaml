@@ -18,6 +18,7 @@
             </MenuItem>
             <MenuItem Header="ツール(_T)" Name="tool">
                 <MenuItem Header="デベロッパー ツール" Name="tool_dvTool" />
+                <MenuItem Header="オプション" Name="tool_Option" />
             </MenuItem>
         </Menu>
     </DockPanel>

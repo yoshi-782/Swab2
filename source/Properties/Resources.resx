@@ -121,7 +121,10 @@
   <data name="index" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\index.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="Template" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="setting" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\setting.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="template" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Template.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;shift_jis</value>
   </data>
 </root>

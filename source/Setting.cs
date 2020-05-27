@@ -19,6 +19,12 @@ namespace Swab2
         /// </summary>
         [DataMember(Name = "fileName")]
         public string HTMLFileName { get; set; } = "";
+
+        [DataMember(Name = "openTextEditor")]
+        public bool OpenTextEditor { get; set; } = false;
+
+        [DataMember(Name = "TextEditor_Path")]
+        public string TEPath { get; set; } = "";
     }
 
     public class Json
@@ -26,7 +32,7 @@ namespace Swab2
         /// <summary>
         /// Jsonの設定クラス
         /// </summary>
-        public Setting SettingJson { get; set; }
+        public Setting JsonProperties { get; set; }
 
         /// <summary>
         /// Jsonのファイル名
@@ -55,7 +61,7 @@ namespace Swab2
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 var serializer = new DataContractJsonSerializer(typeof(Setting));
-                serializer.WriteObject(fileStream, SettingJson);
+                serializer.WriteObject(fileStream, JsonProperties);
             }
         }
 
@@ -69,19 +75,25 @@ namespace Swab2
                 using (var fileStream = new FileStream(filePath, FileMode.OpenOrCreate))
                 {
                     var serializer = new DataContractJsonSerializer(typeof(Setting));
-                    SettingJson = serializer.ReadObject(fileStream) as Setting;
+                    JsonProperties = serializer.ReadObject(fileStream) as Setting;
                 }
 
                 // htmlファイルが存在しない場合は、空文字を設定し、デフォルトを表示させるようにする
-                if (!Directory.Exists(SettingJson.HTMLDirPath))
+                if (!Directory.Exists(JsonProperties.HTMLDirPath))
                 {
-                    SettingJson.HTMLDirPath = "";
+                    JsonProperties.HTMLDirPath = "";
+                }
+
+                // テキストエディタのパスが設定されていない場合は、テキストエディタを開かない
+                if (JsonProperties.TEPath.Length == 0)
+                {
+                    JsonProperties.OpenTextEditor = false;
                 }
             }
             else
             {
                 // 存在しない場合は、値なしのJsonファイルを出力
-                SettingJson = new Setting();
+                JsonProperties = new Setting();
                 WriteJson();
             }
         }
@@ -92,8 +104,8 @@ namespace Swab2
         /// <param name="filePath">ディレクトリパス</param>
         public void SetHTMLFilePath(string filePath)
         {
-            this.SettingJson.HTMLDirPath = Path.GetDirectoryName(filePath);
-            this.SettingJson.HTMLFileName = Path.GetFileName(filePath);
+            this.JsonProperties.HTMLDirPath = Path.GetDirectoryName(filePath);
+            this.JsonProperties.HTMLFileName = Path.GetFileName(filePath);
         }
     }
 }
