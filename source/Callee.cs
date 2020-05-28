@@ -85,7 +85,7 @@ namespace Swab2
         /// JsonのOpenTextEditorの値を取得
         /// </summary>
         /// <returns>OpenTextEditor</returns>
-        public bool IsOpenTextEditor() => MWindow.JsonSetting.JsonProperties.IsDisplayTextEditor;
+        public bool IsDisplayTextEditor() => MWindow.JsonSetting.JsonProperties.IsDisplayTextEditor;
 
         /// <summary>
         /// JsonのTEPathの値をを取得

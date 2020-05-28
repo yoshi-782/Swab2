@@ -151,7 +151,6 @@ namespace Swab2
                 if (!IsDuringSetting)
                 {
                     IsDuringSetting = true;
-                    //server.Stop();
                     browser.LoadHtml(Properties.Resources.setting);
                     ExecuteAfterLoaded();
                 }
@@ -275,6 +274,7 @@ namespace Swab2
             EventHandler<FrameLoadEndEventArgs> eventHandler = null;
             eventHandler += (object s, FrameLoadEndEventArgs e) =>
             {
+                // ロードが完了したかチェック
                 if (e.Frame.IsMain)
                 {
                     // 念の為リロード
@@ -283,7 +283,7 @@ namespace Swab2
                     Dispatcher.Invoke(() =>
                     {
                         // JavaScriptのinit()実行
-                        e.Frame.EvaluateScriptAsync("init();").ContinueWith(x =>
+                        e.Frame.EvaluateScriptAsync("init()").ContinueWith(x =>
                         {
                             if (x.Result.Message.IndexOf("init is not defined") > -1)
                             {

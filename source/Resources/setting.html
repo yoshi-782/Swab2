@@ -8,16 +8,20 @@
         <script type="text/javascript">
             async function init() {
                 await CefSharp.BindObjectAsync("csCallee");
-                csCallee.setWinSize(520, 250);
-                csCallee.setNotResize(true);
-                csCallee.isOpenTextEditor().then(isOpen => $("[name=check1]").prop("checked", isO
-                ));
-                csCallee.getTextEditorPath().then(path => $("[name=path]").val(path));
-                check();
             }
 
-            function check(){
-                $("[name=path]").prop("disabled", !$("[name=check1]").prop("checked"))
+            window.onload = () => {
+                csCallee.setWinSize(520, 250);
+                csCallee.setNotResize(true);
+                csCallee.isDisplayTextEditor().then(isOpen => {
+                    $("[name=check1]").prop("checked", isOpen)
+                    $("[name=path]").prop("disabled", !isOpen);
+                });
+                csCallee.getTextEditorPath().then(path => $("[name=path]").val(path));
+            };
+
+            function check() {
+                $("[name=path]").prop("disabled", !$("[name=check1]").prop("checked"));
             }
 
             function setOption() {
