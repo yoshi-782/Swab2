@@ -4,6 +4,7 @@ using Microsoft.Win32;
 using System;
 using System.IO;
 using System.Windows;
+using System.Diagnostics;
 
 namespace Swab2
 {
@@ -118,6 +119,11 @@ namespace Swab2
                     if (sfd.ShowDialog() == true)
                     {
                         File.WriteAllText(sfd.FileName, Properties.Resources.template);
+                        if (JsonSetting.JsonProperties.IsDisplayTextEditor)
+                        {
+                            StartProcess(JsonSetting.JsonProperties.EditorPath, sfd.FileName);
+                        }
+
                     }
                 }
             };
@@ -142,11 +148,13 @@ namespace Swab2
             tool_Option.Click += (s, e) =>
             {
                 // 設定画面でなければ表示
-                //if (!IsDuringSetting)
-                //{
-                //    browser.LoadHtml(Properties.Resources.setting);
-                //    ExecuteAfterLoaded();
-                //}
+                if (!IsDuringSetting)
+                {
+                    IsDuringSetting = true;
+                    //server.Stop();
+                    browser.LoadHtml(Properties.Resources.setting);
+                    ExecuteAfterLoaded();
+                }
             };
         }
 
@@ -245,8 +253,8 @@ namespace Swab2
                 {
                     server.Start();
                 }
-                browser.Address = server.Url + this.JsonSetting.JsonProperties.HTMLFileName;
-                browser.Reload();
+                browser.Load(server.Url + this.JsonSetting.JsonProperties.HTMLFileName);
+                //browser.Reload();
                 SetWindowNotResize(false);
             }
             else
@@ -269,18 +277,21 @@ namespace Swab2
             {
                 if (e.Frame.IsMain)
                 {
+                    // 念の為リロード
+                    browser.Reload();
+
                     Dispatcher.Invoke(() =>
                     {
-                    // JavaScriptのinit()実行
-                    e.Frame.EvaluateScriptAsync("init();").ContinueWith(x =>
-                    {
-                        if (x.Result.Message.IndexOf("init is not defined") > -1)
+                        // JavaScriptのinit()実行
+                        e.Frame.EvaluateScriptAsync("init();").ContinueWith(x =>
                         {
-                            SetDefaultWindow();
-                        }
-                    });
+                            if (x.Result.Message.IndexOf("init is not defined") > -1)
+                            {
+                                SetDefaultWindow();
+                            }
+                        });
 
-                    // htmlのタイトル取得とウィンドウタイトルに反映
+                        // htmlのタイトル取得とウィンドウタイトルに反映
                         this.HTMLTitle = browser.Title;
                         SetWindowTitle();
                     });
@@ -292,6 +303,23 @@ namespace Swab2
 
             // イベント設定
             browser.FrameLoadEnd += eventHandler;
+        }
+
+        /// <summary>
+        /// 外部アプリの実行
+        /// </summary>
+        /// <param name="appName">アプリ名</param>
+        /// <param name="args">オプション</param>
+        public void StartProcess(string appName, string args = "")
+        {
+            try
+            {
+                Process.Start(appName, args);
+            }
+            catch
+            {
+                // 実行できなかった場合は、テキストエディタを表示しない
+            }
         }
 
         /// <summary>

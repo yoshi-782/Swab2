@@ -10,6 +10,9 @@
                 await CefSharp.BindObjectAsync("csCallee");
                 csCallee.setWinSize(520, 250);
                 csCallee.setNotResize(true);
+                csCallee.isOpenTextEditor().then(isOpen => $("[name=check1]").prop("checked", isO
+                ));
+                csCallee.getTextEditorPath().then(path => $("[name=path]").val(path));
                 check();
             }
 

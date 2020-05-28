@@ -20,11 +20,17 @@ namespace Swab2
         [DataMember(Name = "fileName")]
         public string HTMLFileName { get; set; } = "";
 
+        /// <summary>
+        /// Template.htmlを出力後、テキストエディタで開くかどうか
+        /// </summary>
         [DataMember(Name = "openTextEditor")]
-        public bool OpenTextEditor { get; set; } = false;
+        public bool IsDisplayTextEditor { get; set; } = false;
 
+        /// <summary>
+        /// テキストエディタのパス
+        /// </summary>
         [DataMember(Name = "TextEditor_Path")]
-        public string TEPath { get; set; } = "";
+        public string EditorPath { get; set; } = "";
     }
 
     public class Json
@@ -85,9 +91,9 @@ namespace Swab2
                 }
 
                 // テキストエディタのパスが設定されていない場合は、テキストエディタを開かない
-                if (JsonProperties.TEPath.Length == 0)
+                if (JsonProperties.EditorPath.Length == 0)
                 {
-                    JsonProperties.OpenTextEditor = false;
+                    JsonProperties.IsDisplayTextEditor = false;
                 }
             }
             else

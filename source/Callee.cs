@@ -82,6 +82,18 @@ namespace Swab2
         public void LoadHTML(bool dialog = true) => MWindow.LoadHTMLFile(dialog);
 
         /// <summary>
+        /// JsonのOpenTextEditorの値を取得
+        /// </summary>
+        /// <returns>OpenTextEditor</returns>
+        public bool IsOpenTextEditor() => MWindow.JsonSetting.JsonProperties.IsDisplayTextEditor;
+
+        /// <summary>
+        /// JsonのTEPathの値をを取得
+        /// </summary>
+        /// <returns>TEPath</returns>
+        public string GetTextEditorPath() => MWindow.JsonSetting.JsonProperties.EditorPath;
+
+        /// <summary>
         /// DOSコマンド実行
         /// </summary>
         /// <param name="cmd">コマンド名</param>
@@ -126,10 +138,8 @@ namespace Swab2
         {
             if (MWindow.IsDuringSetting)
             {
-                MWindow.JsonSetting.JsonProperties.OpenTextEditor = TEPath.Length > 0 ? isOpenTE : false;
-                MWindow.JsonSetting.JsonProperties.TEPath = TEPath;
-
-                MessageBox.Show($"OpenTextEditor: {MWindow.JsonSetting.JsonProperties.OpenTextEditor}\nTEPath: {MWindow.JsonSetting.JsonProperties.TEPath}");
+                MWindow.JsonSetting.JsonProperties.IsDisplayTextEditor = TEPath.Length > 0 ? isOpenTE : false;
+                MWindow.JsonSetting.JsonProperties.EditorPath = TEPath;
                 SettingClose();
             }
         }
