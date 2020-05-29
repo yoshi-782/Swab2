@@ -7,6 +7,7 @@
         <script type="text/javascript">
             async function init() {
                 await CefSharp.BindObjectAsync("csCallee");
+                csCallee.setWinSize(800, 450);
                 csCallee.setNotResize(true);
             }
 
@@ -34,6 +35,7 @@
             .container {
                 text-align: center;
                 margin-top: 80px;
+                overflow: hidden;
             }
         </style>
         <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap" rel="stylesheet">
