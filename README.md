@@ -3,7 +3,7 @@
 ## これはなに？
 htmlファイルをローカルで実行させ、あたかも簡単にツールが作れるアプリ
 ## 環境
-* Visual Studio2019 C# .NET Framework4.7.2
+* Visual Studio2019 C# WPF .NET Framework4.7.2
 * Chrome(CefSharp)
 ## できること
 ### ファイル
