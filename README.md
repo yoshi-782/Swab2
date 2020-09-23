@@ -3,8 +3,8 @@
 ## これはなに？
 htmlファイルをローカルで実行させ、あたかも簡単にツールが作れるアプリ
 ## 環境
-* Chrome(CefSharp)
 * Visual Studio2019 C# .NET Framework4.7.2
+* Chrome(CefSharp)
 ## できること
 ### ファイル
 ![image](https://user-images.githubusercontent.com/44921082/94038122-0c1ef800-fe01-11ea-8697-56dd88595e86.png)
